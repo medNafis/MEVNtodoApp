@@ -1,17 +1,60 @@
 <div id="app">
     <h2>To-do App</h2>
+    <input id="newNotes"/>&nbsp;
+    <button @click = "addNewNotes()">Add Notes</button>
+    <p v-for="note in notes" :key="note.id">
+        <b>* {{note.description}}</b>&nbsp;
+        <button @click = "deleteNotes(note.id)">Delete Notes</button>
+    </p>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.2/axios.min.js" integrity="sha512-b94Z6431JyXY14iSXwgzeZurHHRNkLt9d6bAHt7BZT38eqV+GyngIi/tVye4jBKPYQ2lBdRs0glww4fmpuLRwA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 <script type="module">
-  import { createApp, ref } from 'https://unpkg.com/vue@3/dist/vue.esm-browser.js'
+    import { createApp, ref } from 'https://unpkg.com/vue@3/dist/vue.esm-browser.js'
+    const API_URL = "http://localhost:3000/";    
+    createApp({
+        data() {
+            return {
+                title: "To-do App",
+                notes: []
+            }
+        }, methods: {
+            async refreshData(){
+                axios.get(API_URL + "api/todoapp/GetNotes").then(
+                    (res) => {
+                        this.notes = res.data;
+                    }
+                ).catch((error) => {
+                    console.error("Error fetching data:", error);
+                });
+            },
+            async addNewNotes(){
+                var newNotes = document.getElementById("newNotes").value;
+                const formData = new FormData();
+                formData.append("newNotes", newNotes);
 
-  createApp({
-    data() {
-      return {
-        title: "To-do App"
+                axios.post(API_URL+"api/todoapp/AddNotes", formData).then(
+                    (res) => {
+                        this.refreshData();
+                        alert(res.data);
+                    }
+                ).catch((error) => {
+                    console.error("Error adding data:", error);
+                });
+            },
+            async deleteNotes(id){ 
+                axios.delete(API_URL+ "api/todoapp/DeleteNotes?id=" + id).then(
+                    (res) => {
+                        this.refreshData();
+                        alert(res.data);
+                    }
+                ).catch((error) => {
+                    console.error("Error deleting data:", error);
+                });
+            },
+        }, mounted:function(){
+            this.refreshData();
         }
-    }
   }).mount('#app')
 </script>
