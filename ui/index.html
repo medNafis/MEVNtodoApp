@@ -30,7 +30,8 @@
                 });
             },
             async addNewNotes(){
-                var newNotes = document.getElementById("newNotes").value;
+                var newNotesElements = document.getElementById("newNotes");
+                var newNotes = newNotesElements.value;
                 const formData = new FormData();
                 formData.append("newNotes", newNotes);
 
@@ -38,6 +39,7 @@
                     (res) => {
                         this.refreshData();
                         alert(res.data);
+                        newNotesElements.value = '';
                     }
                 ).catch((error) => {
                     console.error("Error adding data:", error);
