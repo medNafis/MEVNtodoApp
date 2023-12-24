@@ -16,7 +16,7 @@ mongoose.connect(process.env.MgDB_Cnx_Str);
 const noteSchema = new mongoose.Schema({
     id: String,
     description: String
-});
+}, { versionKey: false });
 
 const Note = mongoose.model('Note', noteSchema, 'todoappcollection');
 
