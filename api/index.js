@@ -62,7 +62,7 @@ app.post('/api/todoapp/AddNotes', multer().none(), async (req, res) => {
 
 app.delete('/api/todoapp/DeleteNotes', async(req, res) => {
     try {
-        const result = await Note.deleteOne({ id: req.body.id });
+        const result = await Note.deleteOne({ id: req.query.id });
         console.log(result); // Log the result
         res.json("Deleted Successfully");
     } catch (err) {
